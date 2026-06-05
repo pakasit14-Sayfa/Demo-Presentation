@@ -21,7 +21,7 @@ export default function Header() {
   return (
     <header className="flex justify-between items-center py-4 px-6 text-white bg-[#111319]">
       <h1 className="text-xl font-bold tracking-wide">
-        AniVET Medical - Smart Veterinary Recovery Dashboard
+        
       </h1>
       <div className="text-sm font-medium text-gray-300">
         {timeStr}

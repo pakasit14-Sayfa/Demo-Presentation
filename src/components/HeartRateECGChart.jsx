@@ -270,9 +270,9 @@ export default function HeartRateECGChart({ title = "Heart Rate (BPM)", bpm = 12
           {Icon && <Icon className="w-4 h-4 text-gray-400" />}
           {title}
         </h3>
-        <span className="text-[10px] text-gray-400 font-bold bg-[#111319] px-2 py-0.5 rounded border border-[#2d333b] uppercase tracking-wider">
-          Real-time EKG
-        </span>
+        <div className="text-sm font-bold" style={{ color }}>
+          {bpm} <span className="font-normal text-xs text-gray-400">BPM</span>
+        </div>
       </div>
       <div ref={containerRef} className="flex-1 w-full relative overflow-hidden bg-[#111319]/30 rounded-lg border border-[#2d333b]/50">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />

@@ -3,8 +3,9 @@ import {
   ResponsiveContainer, Tooltip
 } from 'recharts';
 import { HeartPulse, Wind, Scale } from 'lucide-react';
+import HeartRateECGChart from './HeartRateECGChart';
 
-function BaseChart({ title, data, dataKey, color, fillOpacity = 0.2, domain = ['auto', 'auto'], customTicks, icon: Icon, currentValue, currentUnit }) {
+function BaseChart({ title, data, dataKey, color, fillOpacity = 0.2, domain = ['auto', 'auto'], customTicks, icon: Icon, currentValue, currentUnit, dotRadius = 2 }) {
   return (
     <div className="bg-[#1c2128] rounded-xl p-4 flex flex-col h-[280px]">
       <div className="flex justify-between items-center mb-4">
@@ -57,8 +58,8 @@ function BaseChart({ title, data, dataKey, color, fillOpacity = 0.2, domain = ['
               strokeWidth={2} 
               fill={`url(#color-${dataKey})`} 
               isAnimationActive={false} 
-              activeDot={{ r: 4, fill: color, stroke: '#1c2128', strokeWidth: 2 }}
-              dot={{ r: 2, fill: color, strokeWidth: 0 }}
+              activeDot={{ r: dotRadius + 2, fill: color, stroke: '#1c2128', strokeWidth: 2 }}
+              dot={{ r: dotRadius, fill: color, strokeWidth: 0 }}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -74,17 +75,11 @@ export default function ChartsSection({ graphData, weightGraphData, bpm, respira
 
   return (
     <div className="grid grid-cols-3 gap-5">
-      <BaseChart 
-        title="Heart Rate Trend" 
-        data={graphData} 
-        dataKey="bpm" 
+      <HeartRateECGChart 
+        title="Heart Rate (BPM)" 
+        bpm={bpm} 
         color="#ef4444" 
-        fillOpacity={0.15}
-        domain={[60, 180]}
-        customTicks={[60, 90, 120, 150, 180]}
-        icon={HeartPulse}
-        currentValue={graphData[graphData.length - 1]?.bpm || bpm}
-        currentUnit="BPM"
+        icon={HeartPulse} 
       />
       <BaseChart 
         title="Respiratory Rate Trend" 
@@ -109,6 +104,7 @@ export default function ChartsSection({ graphData, weightGraphData, bpm, respira
         icon={Scale}
         currentValue={weight?.toFixed(2) || '3.45'}
         currentUnit="kg"
+        dotRadius={5}
       />
     </div>
   );

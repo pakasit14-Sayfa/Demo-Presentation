@@ -19,16 +19,25 @@ function walk(prev, dMin, dMax, min, max) {
  *   graphData        last 30 ticks  { time, bpm, respiratory }
  *   hrChangeHistory  last 12 ticks  { time, change }
  */
-export function useHealthMockData() {
-  const [bpm, setBpm]               = useState(112);
-  const [respiratory, setResp]      = useState(26);
+export function useHealthMockData(patientType = 'cat') {
+  const isDog = patientType === 'dog';
+
+  const [bpm, setBpm]               = useState(isDog ? 85 : 112);
+  const [respiratory, setResp]      = useState(isDog ? 20 : 26);
   const [bodyTemp, setBodyTemp]     = useState(101.5);
-  const [weight, setWeight]         = useState(3.4);
+  const [weight, setWeight]         = useState(isDog ? 28.5 : 3.4);
+  const [co2, setCo2]               = useState(400);
   const [hrChange, setHrChange]     = useState(0);
   const [graphData, setGraphData]   = useState(
-    Array(15).fill(null).map(() => ({ time: '', bpm: 112, respiratory: 26 }))
+    Array(15).fill(null).map(() => ({ time: '', bpm: isDog ? 85 : 112, respiratory: isDog ? 20 : 26 }))
   );
   
+  useEffect(() => {
+    setBpm(isDog ? 85 : 112);
+    setResp(isDog ? 20 : 26);
+    setWeight(isDog ? 28.5 : 3.4);
+  }, [isDog]);
+
   const [weightGraphData, setWeightGraphData] = useState(() => {
     const data = [];
     const now = new Date();
@@ -56,9 +65,14 @@ export function useHealthMockData() {
   useEffect(() => {
     const tick = setInterval(() => {
       setBpm(prev => {
-        // Increased the delta to make the graph more jagged/spiky
-        const next = Math.round(walk(prev, -6, 8, 90, 150));
-        const delta = clamp(next - prevBpm.current, -12, 12);
+        // Use a sine wave to create a clear rhythmic up-and-down pattern
+        const timeSec = Date.now() / 1000;
+        const base = isDog ? 85 : 112;
+        const wave = Math.sin(timeSec * 1.5) * (isDog ? 8 : 14); // Amplitude
+        const noise = (Math.random() * 6) - 3; // Small random jaggedness
+        
+        const next = Math.round(base + wave + noise);
+        const delta = clamp(next - prevBpm.current, -15, 15);
         setHrChange(delta);
         prevBpm.current = next;
 
@@ -75,7 +89,7 @@ export function useHealthMockData() {
       });
 
       // Increased delta for respiratory to add more jaggedness
-      setResp(prev => Math.round(walk(prev, -4, 4, 18, 40)));
+      setResp(prev => Math.round(walk(prev, -4, 4, isDog ? 12 : 18, isDog ? 30 : 40)));
 
       setBodyTemp(prev => {
         const next = walk(prev, -0.2, 0.2, 99.5, 103.0);
@@ -83,12 +97,24 @@ export function useHealthMockData() {
       });
 
       setWeight(prev => {
-        const next = walk(prev, -0.05, 0.05, 3.2, 18.5);
+        const next = walk(prev, -0.05, 0.05, isDog ? 25.0 : 3.2, isDog ? 35.0 : 18.5);
         return parseFloat(next.toFixed(2));
+      });
+
+      setCo2(prev => {
+        // Randomly simulate CO2 levels, mostly around 300-500, but occasionally spiking > 1000
+        const isSpiking = Math.random() < 0.05;
+        if (isSpiking) {
+          return clamp(prev + Math.round(Math.random() * 100), 300, 1050);
+        } else if (prev > 500) {
+          // Recover towards normal
+          return clamp(prev - Math.round(Math.random() * 50), 300, 1050);
+        }
+        return Math.round(walk(prev, -10, 10, 300, 500));
       });
     }, 1000);
     return () => clearInterval(tick);
-  }, []);
+  }, [isDog]);
 
   // Graph data
   useEffect(() => {
@@ -119,7 +145,7 @@ export function useHealthMockData() {
   }, [weight]);
 
   return {
-    bpm, respiratory, bodyTemp, weight, hrChange,
+    bpm, respiratory, bodyTemp, weight, hrChange, co2,
     graphData, hrChangeHistory, weightGraphData
   };
 }

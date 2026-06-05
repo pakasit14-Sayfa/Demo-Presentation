@@ -17,7 +17,7 @@ export default function BottomPanels({
           {[
             { label: 'Air Quality', icon: <Loader className="w-7 h-7 text-green-500 mb-2" />, value: 'Good', color: 'text-green-500', subtext: 'AQI 18' },
             { label: 'Oxygen Control', icon: <div className="text-blue-400 text-[26px] font-semibold mb-1 leading-none tracking-tighter">O<span className="text-[14px]">₂</span></div>, value: `${envStatus.oxygen}%`, color: envStatus.isAdjustingO2 ? 'text-[#f97316] animate-pulse' : 'text-green-500', subtext: 'Set: 21%' },
-            { label: 'CO₂ Level', icon: <Cloud className="w-7 h-7 text-blue-400 mb-2" />, value: `${envStatus.co2} mmHg`, color: envStatus.isFlushingCO2 ? 'text-[#f97316] animate-pulse' : 'text-green-500', subtext: 'Normal' },
+            { label: 'CO₂ Level', icon: <Cloud className="w-7 h-7 text-blue-400 mb-2" />, value: `${envStatus.co2} ppm`, color: envStatus.isFlushingCO2 ? 'text-[#f97316] animate-pulse' : 'text-green-500', subtext: envStatus.co2 >= 1000 ? 'High' : 'Normal' },
             { label: 'Airflow', icon: <Fan className="w-7 h-7 text-blue-400 mb-2" />, value: `${envStatus.airflow} L/min`, color: (envStatus.isAdjustingO2 || envStatus.isFlushingCO2) ? 'text-[#3b82f6] animate-pulse' : 'text-green-500', subtext: 'Optimal' },
             { label: 'Filter Status', icon: <Server className="w-7 h-7 text-gray-400 mb-2" />, value: '98%', color: 'text-green-500', subtext: 'Life Remaining' },
           ].map((item, idx) => (

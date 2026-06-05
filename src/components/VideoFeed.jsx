@@ -1,6 +1,8 @@
 import React from 'react';
+import catVid from '../img/CatMmv.mp4';
+import dogVid from '../img/DogMov.mp4';
 
-export default function VideoFeed() {
+export default function VideoFeed({ patientType = 'cat' }) {
   return (
     <div className="bg-[#1c2128] rounded-xl overflow-hidden relative h-full flex flex-col justify-center">
       {/* "LIVE" Badge */}
@@ -16,7 +18,7 @@ export default function VideoFeed() {
         muted
         playsInline
         className="w-full h-full object-cover"
-        src="src/img/CatMmv.mp4"
+        src={patientType === 'dog' ? dogVid : catVid}
       />
     </div>
   );

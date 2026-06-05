@@ -12,7 +12,7 @@ export default function VitalGrid({ bpm, respiratory, bodyTemp, weight, hrChange
       <VitalCardSmall title="SpO₂" unit="%" value={spO2 || 97} range="95 - 100" colorClass="text-[#06b6d4]" isAlert={anomalies?.spO2} icon={Droplet} />
 
       {/* Row 2 */}
-      <VitalCardSmall title="CO₂" unit="mmHg" value={co2 || 39} range="30 - 45" colorClass="text-white" isAlert={anomalies?.co2} icon={Cloud} />
+      <VitalCardSmall title="CO₂" unit="ppm" value={co2} range="300 - 500" colorClass="text-white" isAlert={anomalies?.co2} icon={Cloud} />
       <VitalCardSmall title="Humidity" unit="%" value={humidity || 50} range="40 - 60" colorClass="text-[#3b82f6]" icon={Waves} />
       <VitalCardSmall title="Weight" unit="kg" value={weight} trend="0.02" colorClass="text-white" icon={Scale} />
       <VitalCardSmall 
